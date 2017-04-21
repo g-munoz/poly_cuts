@@ -1,0 +1,4 @@
+EYM 0
+SEYM 0
+Minor 1
+PSD 1
