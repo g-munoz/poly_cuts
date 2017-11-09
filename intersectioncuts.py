@@ -32,7 +32,7 @@ def main():
 	for i in xrange(m.numVars):
 		varNumberToName[i] = varlist[i].getAttr("VarName")
 		varNameToNumber[varlist[i].getAttr("VarName")] = i
-			
+		
 	if boundTightening:
 		boundImproved = False
 		x, X, bound_model = fh.linearize(m, varNameToNumber, varNumberToName, 0)
@@ -191,8 +191,8 @@ def main():
 					types = np.hstack([types, [2 for i in range(len(pirhs_list))] ])
 
 		if Minor:
-			pi_list, pirhs_list, viol_list = cuts.minorcut(xbasic, xbasic_matrix, dirs,dirs_matrix, lenOfX, Xtovec, Abasic, bbasic)
-
+			#pi_list, pirhs_list, viol_list = cuts.minorcut(xbasic, xbasic_matrix, dirs,dirs_matrix, lenOfX, Xtovec, Abasic, bbasic)
+			pi_list, pirhs_list, viol_list = cuts.generalizedminorcut(xbasic, xbasic_matrix, dirs,dirs_matrix, lenOfX, Xtovec, Abasic, bbasic)
 			if not len(pi_list) == 0:
 				if len(pi_all) == 0:
 					pi_all = pi_list
@@ -221,7 +221,7 @@ def main():
 		for k in xrange(np.shape(pi_all)[0]):
 			if violation_all[k] > 0:
 				cut_tuples.append((pi_all[k], pirhs_all[k], violation_all[k], types[k]))
-		max_cuts = 5
+		max_cuts = 10
 		added_cuts = 0
 		
 		cut_tuples.sort(key=lambda curr_tuple: curr_tuple[2], reverse=True)
@@ -259,7 +259,7 @@ def main():
 		
 		post_time += ( - start_t + time.time() )
 		
-		if iter_num%5 == 0:
+		if iter_num%1 == 0:
 			max_viol = 0
 			if len(violation_all) == 1:
 				max_viol = violation_all[0]
