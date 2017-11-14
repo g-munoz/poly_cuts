@@ -10,7 +10,6 @@ import time
 global eps
 
 eps = 1E-10
-input_opt = 0
 strengthen = False
 
 def checkifparallel(pi, pirhs, A, b, rowNorms):
@@ -65,10 +64,9 @@ def removenearparallel(A, b, m):
 
 def generalizedminorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic, bbasic):
 
-	elemvioltol=1E-5; #pminor violation when to add a cut, 10^-6 seems to give stability problems
 	stepback=1E-9; #what fraction to step back to avoid infeas cuts
 	PDtol=1E-8
-	interiortol=1E-6 #tolerance for determining if current point is in the interior of an Sfree set
+	interiortol=1E-5 #tolerance for determining if current point is in the interior of an Sfree set
 
 	#find elementary violations
 	counter=0;
@@ -312,7 +310,6 @@ def generalizedminorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic,
 	
 	#info_tuples.sort(key=lambda curr_tuple: curr_tuple[2], reverse=True)
 
-
 	#viol_sorted = np.sort(violations, axis=0)
 
 	#print 'Violation of cuts with all minors'
@@ -320,19 +317,6 @@ def generalizedminorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic,
 	#	print info_tuples[i]
 
 	return pi, pirhs, violations 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def minorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic, bbasic):
@@ -354,9 +338,6 @@ def minorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic, bbasic):
 
 			if (solX_matrix[i][i]*solX_matrix[j][j] - solX_matrix[i][j]**2) > eps :
 				
-				#normTerm = math.sqrt((solX_matrix[i][i]- solX_matrix[j][j])*(solX_matrix[i][i]- solX_matrix[j][j]) + 4*solX_matrix[i][j]*solX_matrix[i][j])
-				#normviol = ( solX_matrix[i][i] + solX_matrix[j][j] - normTerm)/(2*(solX_matrix[i][i] + solX_matrix[j][j])) #min eig/trace
-
 				normviol = (solX_matrix[i][i]*solX_matrix[j][j] - solX_matrix[i][j]**2)/max(solX_matrix[i][i]*solX_matrix[j][j], solX_matrix[i][j]**2)
 
 				if normviol > elemvioltol :
@@ -365,18 +346,6 @@ def minorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic, bbasic):
 
 
 	minor_violation_tuples.sort(key=lambda curr_tuple: curr_tuple[1], reverse=True)
-
-	#print 'Principal minor violations'
-	#for i in xrange(5) :
-	#	print minor_violation_tuples[i]
-
-	#print '...'
-	#for i in xrange(5) :
-	#	print minor_violation_tuples[counter-1 - i]
-
-	#print '==================='
-	#raw_input()	
-
 
 	minorscount = min(counter,max_cuts)	
 
@@ -500,20 +469,6 @@ def minorcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic, bbasic):
 	violations = np.array(violations)
 	violations = violations.reshape((len(violations),1))
 
-
-
-	#######delete
-
-	#info_tuples.sort(key=lambda curr_tuple: curr_tuple[2], reverse=True)
-
-
-	#viol_sorted = np.sort(violations, axis=0)
-	#print 'Violations of cuts with principal minors'
-	#for i in xrange(min(10, len(violations))):
-	#	print info_tuples[i]
-	##############
-	
-	#raw_input()	
 	return pi, pirhs, violations 
 
 def outerpsd(solX, solX_matrix, n, Xtovec):
@@ -629,7 +584,6 @@ def eymcutplusplus(solX, solX_matrix, dirs, dirs_matrix, nx, Xtovec, A, b, Abasi
 				D = dirs_matrix[i]
 				
                 #check for finite step length
-				#innerDC2 = np.sum(np.multiply(D,C))
 				innerDC = np.sum(np.multiply(D,C))
                 
 				r1 = innerDC*q/(Cfro*math.sqrt(Csqs))
@@ -840,7 +794,6 @@ def eymcut(solX, solX_matrix, dirs, dirs_matrix, n, Xtovec, Abasic, bbasic):
 
 	return pi, pirhs, violation
 
-
 def findraysVecAndMatrix(Abasic, Xtovec, n, lenofFullX):
 	
 	dirs = -np.transpose(np.linalg.inv(Abasic))
@@ -930,6 +883,6 @@ def computeRoots(a,b,c):
 	elif abs(disc_test) < eps : #discriminant nearly 0 (scaled)
 		return np.array([-b/(2*a)])
 	else :
-		disc_sq = math.sqrt(disc)
-		return np.array([(-b+disc_sq)/(2*a) , (-b-disc_sq)/(2*a)])
+		disc_sqrt = math.sqrt(disc)
+		return np.array([(-b+disc_sqrt)/(2*a) , (-b-disc_sqrt)/(2*a)])
 

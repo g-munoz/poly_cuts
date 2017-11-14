@@ -259,7 +259,7 @@ def main():
 		
 		post_time += ( - start_t + time.time() )
 		
-		if iter_num%1 == 0:
+		if iter_num%5 == 0:
 			max_viol = 0
 			if len(violation_all) == 1:
 				max_viol = violation_all[0]
@@ -302,10 +302,10 @@ def main():
 		old_val = new_val
 
 	# EYM, SEYM, PSD, Minor
-	print '\nINFO1:', counts[0], counts[1], counts[2], counts[3]
-	print 'INFO2: {:5d} {:2.12f} {:6d} {:3.2f} {:3.2f} {:3.2f} {:3.2f} {:3.2f}'.format(iter_num, objval, sum(counts), run_time, gurobi_time, pre_time, cut_time, post_time)
 
-	displayBFSSol(mlin, A,b,x,X, Xtovec)
+	print filename, 'INFO: | {:2.12f} | {:6d} | {:6d} | {:6d} | {:6d} | {:5d} | {:3.2f} | {:3.2f} | {:1.2f} | {:3.2f} | {:3.2f} | {:3.2f}'.format(objval, counts[0], counts[1], counts[2], counts[3], iter_num, run_time, gurobi_time, gurobi_time/run_time, pre_time, cut_time, post_time)
+
+	#displayBFSSol(mlin, A,b,x,X, Xtovec)
 
 def computeBasis(mlin, A, b, x, X, Xtovec):
 	constrs = mlin.getConstrs()
